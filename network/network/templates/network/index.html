@@ -1,0 +1,64 @@
+{% extends "network/layout.html" %}
+
+{% block script %}
+    {% load static %}
+        <script src="{% static 'network/index.js' %}"></script>
+{% endblock %}
+
+
+{% block body %}
+
+    {% if val %}
+        <input type="hidden", value="{{ val }}", id="checkFollowerPage">
+        <h1>Following</h1>
+        {% if user.is_authenticated %}
+            <div id="follower-post-content">
+            </div>
+        {% endif %}
+    {% else %}
+        {% if user.is_authenticated %}
+            <div class="form-group" id="add-post">
+
+            <input id="new-id" type="hidden" value="{{ new }}">
+                <h1>New Post</h1>
+                <form id="add-form" action="{% url 'index' %}" method="post">
+                {% csrf_token %}
+                <textarea class="form-control" name="postContent" id="add-post-textarea" rows="5" placeholder="Enter Post"></textarea> 
+                <p></p> 
+                <input class="btn btn-primary" type="submit" class="btn btn-primary" value="Post">                        
+                </form>
+                <div id="updateDiv"></div>
+
+            {% if info %}
+                {{ info }}
+            {% endif %}
+            </div>
+        
+            <div id="post-content">
+            </div>
+            
+        {% else %}
+            Please Create an Account
+        {% endif %}
+    {% endif %}
+
+
+    {% if user.is_authenticated %}
+        <div id="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                {% endif %}
+            </span>    
+        </div>
+        <input id="thePageNumber" type="hidden" value="{{ page_obj.number }}">
+    {% endif %}
+{% endblock %}

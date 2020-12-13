@@ -1,0 +1,53 @@
+{% extends "network/layout.html" %}
+
+{% block script %}
+    {% load static %}
+        <script src="{% static 'network/profile.js' %}"></script>
+{% endblock %}
+
+{% block body %}
+
+    <div id="profile-info">
+    </div>
+
+    {% if request.user.username != usersname and followConfirm != 1%}
+        <form action="{% url 'profile' usersname %}" id="followForm" method="post">
+            <input name="followButton" id="followButton" type="submit" class="btn btn-primary" value="Follow">
+            <input name="new-follow" id="new-follow" type="hidden" value="{{ usersname }}">
+        </form>
+        <p></p>
+    {% elif followConfirm == 1 %}
+        <form action="{% url 'profile' usersname %}" id="unfollowForm" method="post">
+            <input name="UnfollowButton" id="UnfollowButton" type="submit" class="btn btn-danger" value="Unfollow">
+        </form>
+        <p></p>
+    {% endif %}
+
+
+    <div id="post-order">
+        <div id="edit-div">
+        </div>
+    </div>
+
+    <input id="usersname" type="hidden" value="{{ usersname }}">
+    <input id="logged-user" type="hidden" value="{{ request.user.username }}"
+
+
+    <div id="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+            {% endif %}
+        </span>    
+    </div>
+    <input id="thePageNumber" type="hidden" value="{{ page_obj.number }}">
+
+{% endblock %}
